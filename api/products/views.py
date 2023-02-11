@@ -23,10 +23,12 @@ class HomeListView(APIView):
             discounted_products = products.filter(
                 discount__gt=0)[:settings.homeDiscountedLimit]
             banner_serializer = BannerSerializer(banners, many=True)
-            recommend_serializer = ProductSerializer(recommend_products, many=True)
+            recommend_serializer = ProductSerializer(
+                recommend_products, many=True)
             discounted_serializer = ProductSerializer(
                 discounted_products, many=True)
-            return Response({"banners": banner_serializer.data, "recommended": recommend_serializer.data, "discounted": discounted_serializer.data})
+            return Response({"banners": banner_serializer.data, "recommended": recommend_serializer.data, 
+            "discounted": discounted_serializer.data})
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -48,7 +50,7 @@ class ProductListView(APIView):
         try:
             products = Product.objects.filter(active=True)
             if request.query_params.get("limit", None):
-                limit = request.query_params.get("limit",None)
+                limit = request.query_params.get("limit", None)
             if request.query_params.get("brandId", None):
                 brandId = request.query_params.get("brandId", None)
                 products = products.filter(brand=brandId)
@@ -64,9 +66,10 @@ class ProductListView(APIView):
             if request.query_params.get("query", None):
                 query = request.query_params.get("query", None)
                 products = products.filter(title=query)
-            if request.query_params.get("sortTo",None):
+            if request.query_params.get("sortTo", None):
                 sortTo = request.query_params.get("sortTo", None)
-                products = products.filter(price__gte=sortTo.split("-")[0], price__lte=sortTo.split("-")[-1])
+                products = products.filter(price__gte=sortTo.split(
+                    "-")[0], price__lte=sortTo.split("-")[-1])
             paginator = PageNumberPagination()
             paginator.page_size = limit
             result = paginator.paginate_queryset(products, request)
