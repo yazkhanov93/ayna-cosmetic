@@ -7,6 +7,7 @@ from PIL import ImageFilter
 import blurhash
 import numpy
 from django.core.files.images import get_image_dimensions
+from django.utils import timezone
 
 
 
@@ -128,9 +129,10 @@ class Product(models.Model):
 class ProductGroup(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="haryt", related_name="productGroup")
     price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="baha")
-    quantity = models.PositiveIntegerField(verbose_name="sany")
+    quantity = models.PositiveIntegerField(verbose_name="galan sany")
+    total_quantity = models.PositiveIntegerField(verbose_name="gelen sany")
     note = models.CharField(max_length=255, verbose_name="bellik", null=True, blank=True)
-    createdAt = models.DateField(auto_now_add=True, verbose_name="goşulan güni")
+    createdAt = models.DateField(default=timezone.now, verbose_name="goşulan güni")
 
     class Meta:
         verbose_name_plural = "Harydyň Tapgyrlary"

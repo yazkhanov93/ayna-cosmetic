@@ -4,6 +4,7 @@ from ckeditor.fields import RichTextField
 import blurhash
 from PIL import Image as IMG
 import numpy
+from products.models import Product
 
 
 class Post(models.Model):
@@ -11,6 +12,7 @@ class Post(models.Model):
     content = RichTextField(verbose_name="Teks", null=True, blank=True)
     videoCover = models.ImageField(upload_to="video_cover/", blank=True, null=True, verbose_name="suraty")
     video = models.FileField(upload_to="video/", blank=True, null=True, verbose_name="wideo")
+    products = models.ManyToManyField(Product, verbose_name="harytlar", blank=True)
     active = models.BooleanField(default=True, verbose_name="aktiw")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="goşulan güni")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="üýtgedilen güni")

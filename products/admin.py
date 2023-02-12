@@ -12,6 +12,7 @@ class BannerAdmin(admin.ModelAdmin):
 
 class ProductGroupInline(admin.TabularInline):
     model = ProductGroup
+    fields = ["price","quantity","total_quantity","note","createdAt"]
     extra = 1
 
 class ProductImageInline(admin.TabularInline):
@@ -26,7 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ["discount", "active","recommend"]
     list_filter = ["active","discount","colors", "recommend"]
     search_fields = ["title",]
-    readonly_fields = ["image_tag"]
+    readonly_fields = ["image_tag", "createdAt"]
 
     save_as = True
     save_on_top = True
