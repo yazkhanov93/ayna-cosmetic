@@ -9,11 +9,14 @@ class BannerAdmin(admin.ModelAdmin):
     list_filter = ["active", "recommend", "discount"]
     readonly_fields = ["image_tag",]
 
+    # def save_model(self, request, obj, form, change):
+
+
 
 class ProductGroupInline(admin.TabularInline):
     model = ProductGroup
     fields = ["price","quantity","total_quantity","note","createdAt"]
-    extra = 1
+    extra = 0
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage

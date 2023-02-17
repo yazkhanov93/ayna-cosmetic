@@ -7,7 +7,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
     # product = ProductSerializer(many=True)
     class Meta:
         model = SubCategory
-        fields = ["id", "title", "image", "blurHash"]
+        fields = ["id", "title", "image",] # "blurHash"]
 
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,18 +30,17 @@ class ColorSerializer(serializers.ModelSerializer):
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ["id", "url", "urlMini","blurHash"]
+        fields = ["id", "url", "urlMini",] #"blurHash"]
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     productImages = ProductImageSerializer(many=True)
-    colors = ColorSerializer(many=True)
+    colors = ColorSerializer(many=False)
     brand = BrandSerializer(many=False)
     subcategory = SubCategorySerializer(many=False)
     class Meta:
         model = Product
-        fields = ["id", "title", "price","discount", "description", "colors", "brand", "subcategory","productImages"]
-
+        fields = ["id", "title", "price","discount", "description", "colors", "brand", "subcategory","productImages",]
 
 class ProductSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(many=False)
@@ -65,12 +64,12 @@ class SubCategoryDetailSerializer(serializers.ModelSerializer):
     product = ProductSerializer(many=True)
     class Meta:
         model = SubCategory
-        fields = ["id", "title", "image", "product", "blurHash"]
+        fields = ["id", "title", "image", "product",] # "blurHash"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategory = SubCategorySerializer(many=True)
     class Meta:
         model = Category
-        fields = ["id","title","image", "blurHash", "subcategory"]
+        fields = ["id","title","image", "subcategory"] #"blurHash",
 

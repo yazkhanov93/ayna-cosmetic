@@ -13,7 +13,7 @@ from django.utils import timezone
 
 class Category(models.Model):
     title = models.CharField(max_length=255, verbose_name="ady")
-    image = models.ImageField(upload_to="category_img/", verbose_name="suraty")
+    image = models.ImageField(upload_to="category_img/", verbose_name="suraty", null=True, blank=True)
     index = models.PositiveIntegerField(default=1, verbose_name="orny")
     active = models.BooleanField(default=True, verbose_name="aktiw")
 
@@ -24,10 +24,10 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-    def blurHash(self):
-        img = IMG.open(self.image).convert("RGB")
-        blurhasH = blurhash.encode(numpy.array(img))
-        return blurhasH
+    # def blurHash(self):
+    #     img = IMG.open(self.image).convert("RGB")
+    #     blurhasH = blurhash.encode(numpy.array(img))
+    #     return blurhasH
 
     def image_tag(self):
         img_url = str(self.image.url)
@@ -40,7 +40,7 @@ class Category(models.Model):
 class SubCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="ugry", related_name="subcategory")
     title = models.CharField(max_length=255, verbose_name="ady")
-    image = models.ImageField(upload_to="subcategory_img/", verbose_name="suraty")
+    image = models.ImageField(upload_to="subcategory_img/", verbose_name="suraty", null=True, blank=True)
     index = models.PositiveIntegerField(default=1, verbose_name="orny")
     active = models.BooleanField(default=True, verbose_name="aktiw")
 
@@ -51,10 +51,10 @@ class SubCategory(models.Model):
     def __str__(self):
         return self.title
 
-    def blurHash(self):
-        img = IMG.open(self.image).convert("RGB")
-        blurhasH = blurhash.encode(numpy.array(img))
-        return blurhasH
+    # def blurHash(self):
+    #     img = IMG.open(self.image).convert("RGB")
+    #     blurhasH = blurhash.encode(numpy.array(img))
+    #     return blurhasH
 
     def image_tag(self):
         img_url = str(self.image.url)
@@ -86,7 +86,7 @@ class Brand(models.Model):
 
 class Color(models.Model):
     title = models.CharField(max_length=255, verbose_name="ady")
-    hexCode = ColorField(format="hexa", verbose_name="hex kod")
+    hexCode = ColorField(format="hexa", verbose_name="hex kod", blank=True, null=True)
     index = models.PositiveIntegerField(default=1, verbose_name="orny")
     active = models.BooleanField(default=True, verbose_name="aktiw")
 
@@ -103,7 +103,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name="beýany")
     price = models.DecimalField(decimal_places=2, max_digits=12, verbose_name="bahasy")
     discount = models.DecimalField(decimal_places=2, max_digits=12, verbose_name="arzanladyş baha", blank=True, null=True)
-    colors = models.ManyToManyField(Color, related_name="colors", verbose_name="reňkleri")
+    colors = models.ForeignKey(Color, related_name="colors", on_delete=models.CASCADE, verbose_name="reňkleri", blank=True, null=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name="brand", related_name="product")
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, verbose_name="bölüm", related_name="subcategory")
     active = models.BooleanField(default=True, verbose_name="aktiw")
@@ -159,10 +159,10 @@ class ProductImage(models.Model):
     def imageHeight(self):
         return self.url.height
 
-    def blurHash(self):
-        img = IMG.open(self.url).convert("RGB")
-        image = blurhash.encode(numpy.array(img))
-        return image
+    # def blurHash(self):
+    #     img = IMG.open(self.url).convert("RGB")
+    #     image = blurhash.encode(numpy.array(img))
+    #     return image
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -214,3 +214,5 @@ class Banner(models.Model):
     image_tag.short_description = "Surat"
     image_tag.allow_tags = True
 
+
+    

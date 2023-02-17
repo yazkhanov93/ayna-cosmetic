@@ -10,6 +10,7 @@ from django.db.models import Q
 from .serializers import (CategorySerializer, SubCategorySerializer, SubCategoryDetailSerializer,
                           BrandSerializer, BrandDetailSerializer, ProductSerializer,
                           ProductDetailSerializer, BannerSerializer)
+from .service import diffColors
 
 
 class HomeListView(APIView):
@@ -83,7 +84,9 @@ class ProductDetailView(APIView):
     def get(self, request, pk):
         try:
             product = Product.objects.get(id=pk)
+            diffColor = diffColors(product.title, product.id)
             serializer = ProductDetailSerializer(product, many=False)
-            return Response(serializer.data)
+            diffColorsSerializer = ProductSerializer(diffColor, many=True)
+            return Response({"product":serializer.data, "diffColors":diffColorsSerializer.data})
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
