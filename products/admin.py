@@ -1,5 +1,9 @@
 from django.contrib import admin
 from .models import Category, SubCategory, Brand, Color, Product, ProductGroup, ProductImage, Banner
+import numpy
+import blurhash
+from PIL import Image as IMG
+from service.blurhash import blurCatImage, blurSubCatImage, blurBrandImage, blurProdImage, blurBannerImage
 
 
 @admin.register(Banner)
@@ -9,7 +13,9 @@ class BannerAdmin(admin.ModelAdmin):
     list_filter = ["active", "recommend", "discount"]
     readonly_fields = ["image_tag",]
 
-    # def save_model(self, request, obj, form, change):
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        blurBannerImage()
 
 
 
@@ -28,13 +34,16 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductGroupInline, ProductImageInline]
     list_display = ["title", "image_tag","discount", "price", "brand", "active","recommend"]
     list_editable = ["discount", "active","recommend"]
-    list_filter = ["active","discount","colors", "recommend"]
+    list_filter = ["active","discount","color", "recommend"]
     search_fields = ["title",]
     readonly_fields = ["image_tag", "createdAt"]
 
     save_as = True
     save_on_top = True
 
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        blurProdImage()
 
 
 @admin.register(Color)
@@ -51,6 +60,10 @@ class BrandAdmin(admin.ModelAdmin):
     list_filter = ["active",]
     readonly_fields = ["logo_tag"]
 
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        blurBrandImage()
+
  
 
 @admin.register(Category)
@@ -58,6 +71,11 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ["title", "image_tag", "index", "active"]
     list_editable = ["active", "index", ]
     list_filter = ["active",]
+    # prepopulated_fields = {"blurhash":("title",)}
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        blurCatImage()
 
 
 @admin.register(SubCategory)
@@ -66,3 +84,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
     list_editable = ["active", "index"]
     list_filter = ["active",]
     readonly_fields = ["image_tag"]
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        blurSubCatImage()

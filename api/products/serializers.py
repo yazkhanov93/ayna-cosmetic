@@ -34,13 +34,13 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    productImages = ProductImageSerializer(many=True)
-    colors = ColorSerializer(many=False)
+    images = ProductImageSerializer(many=True)
+    color = ColorSerializer(many=False)
     brand = BrandSerializer(many=False)
     subcategory = SubCategorySerializer(many=False)
     class Meta:
         model = Product
-        fields = ["id", "title", "price","discount", "description", "colors", "brand", "subcategory","productImages",]
+        fields = ["id", "title", "price","discount", "description", "color", "brand", "subcategory","images",]
 
 class ProductSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(many=False)

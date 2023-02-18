@@ -4,7 +4,7 @@ from colorfield.fields import ColorField
 import decimal
 from PIL import Image as IMG
 from PIL import ImageFilter
-import blurhash
+# import blurhash
 import numpy
 from django.core.files.images import get_image_dimensions
 from django.utils import timezone
@@ -14,6 +14,7 @@ from django.utils import timezone
 class Category(models.Model):
     title = models.CharField(max_length=255, verbose_name="ady")
     image = models.ImageField(upload_to="category_img/", verbose_name="suraty", null=True, blank=True)
+    blurhash = models.CharField(max_length=255, blank=True, null=True, verbose_name="blurhash",)
     index = models.PositiveIntegerField(default=1, verbose_name="orny")
     active = models.BooleanField(default=True, verbose_name="aktiw")
 
@@ -41,6 +42,7 @@ class SubCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="ugry", related_name="subcategory")
     title = models.CharField(max_length=255, verbose_name="ady")
     image = models.ImageField(upload_to="subcategory_img/", verbose_name="suraty", null=True, blank=True)
+    blurhash = models.CharField(max_length=255, blank=True, null=True, verbose_name="blurhash",)
     index = models.PositiveIntegerField(default=1, verbose_name="orny")
     active = models.BooleanField(default=True, verbose_name="aktiw")
 
@@ -67,6 +69,7 @@ class SubCategory(models.Model):
 class Brand(models.Model):
     title = models.CharField(max_length=255, verbose_name="ady")
     logo = models.ImageField(upload_to="brand_img/", verbose_name="logo")
+    blurhash = models.CharField(max_length=255, blank=True, null=True, verbose_name="blurhash",)
     active = models.BooleanField(default=True, verbose_name="aktiw")
     createdAt = models.DateTimeField(auto_now_add=True, verbose_name="goşulan güni")
     updatedAt = models.DateTimeField(auto_now=True, verbose_name="üýtgedilen güni")
@@ -103,7 +106,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name="beýany")
     price = models.DecimalField(decimal_places=2, max_digits=12, verbose_name="bahasy")
     discount = models.DecimalField(decimal_places=2, max_digits=12, verbose_name="arzanladyş baha", blank=True, null=True)
-    colors = models.ForeignKey(Color, related_name="colors", on_delete=models.CASCADE, verbose_name="reňkleri", blank=True, null=True)
+    color = models.ForeignKey(Color, related_name="color", on_delete=models.CASCADE, verbose_name="reňkleri", blank=True, null=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name="brand", related_name="product")
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, verbose_name="bölüm", related_name="subcategory")
     active = models.BooleanField(default=True, verbose_name="aktiw")
@@ -142,9 +145,10 @@ class ProductGroup(models.Model):
     
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="productImages", verbose_name="haryt")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images", verbose_name="haryt")
     url = models.ImageField(upload_to="product_img/", verbose_name="surat")
     urlMini = models.ImageField(upload_to="product_img/", verbose_name="kici surat", blank=True, null=True)
+    blurhash = models.CharField(max_length=255, blank=True, null=True, verbose_name="blurhash",)
     active = models.BooleanField(default=True, verbose_name="aktiw")
 
     class Meta:
@@ -189,6 +193,7 @@ class ProductImage(models.Model):
 class Banner(models.Model):
     title = models.CharField(max_length=255, verbose_name="ady")
     image = models.ImageField(upload_to="banner_img/", verbose_name="suraty")
+    blurhash = models.CharField(max_length=255, blank=True, null=True, verbose_name="blurhash",)
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="brand")
     subcategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="bölüm")
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="haryt")
