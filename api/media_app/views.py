@@ -19,9 +19,9 @@ class PostDetailView(APIView):
 
 class PostListView(APIView):
     def get(self, request):
-        try:
+        # try:
             post = Post.objects.filter(active=True)
             serializer = PostSerializer(post, many=True)
             return Response(serializer.data)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        # except:
+        #     return Response(status=status.HTTP_404_NOT_FOUND)

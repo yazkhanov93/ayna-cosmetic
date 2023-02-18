@@ -1,9 +1,7 @@
 from django.db import models
 from django.utils.safestring import mark_safe
 from ckeditor.fields import RichTextField
-import blurhash
 from PIL import Image as IMG
-import numpy
 from products.models import Product
 
 
@@ -11,6 +9,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="ady")
     content = RichTextField(verbose_name="Teks", null=True, blank=True)
     videoCover = models.ImageField(upload_to="video_cover/", blank=True, null=True, verbose_name="suraty")
+    blurhash = models.CharField(max_length=255, verbose_name="blurhash", blank=True, null=True)
     video = models.FileField(upload_to="video/", blank=True, null=True, verbose_name="wideo")
     products = models.ManyToManyField(Product, verbose_name="harytlar", blank=True)
     active = models.BooleanField(default=True, verbose_name="aktiw")
@@ -23,18 +22,13 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    def blurHash(self):
-        if self.videoCover:
-            img = IMG.open(self.videoCover).convert("RGB")
-            blurhasH = blurhash.encode(numpy.array(img))
-            return blurhasH
 
     def image(self):
-        img = PostImage.objects.filter(post=self)[:1].get()
+        img = PostImage.objects.filter(post=self).first()
         if self.video:
-            return str(self.videoCover)
+            return str(self.videoCover), str(self.blurhash)
         else:
-            return str(img.image)
+            return str(img.image), str(img.blurhash)
 
     def image_tag(self):
         if self.videoCover:
@@ -50,12 +44,13 @@ class Post(models.Model):
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="post", related_name="images")
     image = models.ImageField(upload_to="post_img/", blank=True, null=True, verbose_name="surat")
+    blurhash = models.CharField(max_length=255, verbose_name="blurhash", blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Suratlar"
 
-    def blurHash(self):
-        if self.image:
-            img = IMG.open(self.image).convert("RGB")
-            blurhasH = blurhash.encode(numpy.array(img))
-            return blurhasH
+    # def blurHash(self):
+    #     if self.image:
+    #         img = IMG.open(self.image).convert("RGB")
+    #         blurhasH = blurhash.encode(numpy.array(img))
+    #         return blurhasH

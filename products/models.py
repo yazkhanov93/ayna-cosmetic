@@ -121,7 +121,7 @@ class Product(models.Model):
         return self.title
 
     def image_tag(self):
-        image = ProductImage.objects.filter(product=self)[:1].get()
+        image = ProductImage.objects.filter(product=self).first()
         img_url = str(image.urlMini.url)
         return mark_safe('<img src="%s" style="width: 45px; height:45px;" />' % img_url)
 
