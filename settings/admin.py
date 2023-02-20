@@ -4,4 +4,4 @@ from .models import Settings
 
 @admin.register(Settings)
 class SettingsAdmin(admin.ModelAdmin):
-    list_display = ["percent","homeDiscountedLimit", "homeRecommendLimit"]
+    list_display = ["phone_number","homeDiscountedLimit", "homeRecommendLimit"]

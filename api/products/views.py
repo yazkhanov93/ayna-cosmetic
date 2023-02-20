@@ -28,7 +28,7 @@ class HomeListView(APIView):
                 recommend_products, many=True)
             discounted_serializer = ProductSerializer(
                 discounted_products, many=True)
-            return Response({"banners": banner_serializer.data, "recommended": recommend_serializer.data, 
+            return Response({"banners": banner_serializer.data, "recommended": recommend_serializer.data,
             "discounted": discounted_serializer.data})
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -66,11 +66,17 @@ class ProductListView(APIView):
                 products = products.filter(discount__gt=0)
             if request.query_params.get("query", None):
                 query = request.query_params.get("query", None)
-                products = products.filter(title=query)
+                products = products.filter(Q(brand__title__icontains=query.strip().lower()) | Q(title__icontains=query.strip().lower()))
+            # if request.query_params.get("sortTo", None):
+            #     sortTo = request.query_params.get("sortTo", None)
+            #     products = products.filter(Q(price__gte=sortTo.split(
+            #         "-")[0]) | Q(price__lte=sortTo.split("-")[-1]))
             if request.query_params.get("sortTo", None):
                 sortTo = request.query_params.get("sortTo", None)
-                products = products.filter(price__gte=sortTo.split(
-                    "-")[0], price__lte=sortTo.split("-")[-1])
+                products = products.order_by(sortTo)
+            if request.query_params.get("date", None):
+                date = request.query_params.get("date", None)
+                products = products.order_by(date)
             paginator = PageNumberPagination()
             paginator.page_size = limit
             result = paginator.paginate_queryset(products, request)
