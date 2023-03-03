@@ -60,7 +60,7 @@ class ProductListView(APIView):
                 products = products.filter(subcategory=subcategoryId)
             if request.query_params.get("recommend", None):
                 recommend = request.query_params.get("recommend", None)
-                products = products.filter(recommend=recommend)
+                products = products.filter(recommend=recommend.title())
             if request.query_params.get("discount", None):
                 discount = request.query_params.get("discount", None)
                 products = products.filter(discount__gt=0)
