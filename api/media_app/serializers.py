@@ -1,7 +1,12 @@
 from rest_framework import serializers
+from api.products.serializers import ProductSerializer
+from media_app.models import Post, PostImage, PostVideo
 
-from media_app.models import Post, PostImage
 
+class PostVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostVideo
+        fields = ["id", "videoCover", "blurhash", "video"]
 
 class PostImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,20 +15,16 @@ class PostImageSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    # images = PostImageSerializer(many=True)[:0]
+    images = PostImageSerializer(many=True)
+    videos = PostVideoSerializer(many=True)
     class Meta:
         model = Post
-        fields = ["id", "title", "image"]
-
-    # def get_image(self, obj):
-    #     try:
-    #         images = PostImage.objects.filter(post=obj)
-    #         return PostImageSerializer([images[0]], many=True).data
-    #     except:
-    #         pass
+        fields = ["id", "title", "images", "videos"]
 
 class PostDetailSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True)
+    videos = PostVideoSerializer(many=False)
+    products = ProductSerializer(many=True)
     class Meta:
         model = Post
         fields = "__all__"
