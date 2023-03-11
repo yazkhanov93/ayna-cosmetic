@@ -18,7 +18,7 @@ def blurPostImage():
 
 def blurPostVideoCover():
     try:
-        posts = Post.objects.filter(blurhash__isnull=True).exclude(blurhash="")
+        posts = PostVideo.objects.filter(blurhash__isnull=True).exclude(blurhash="")
         for i in posts:
             blur = IMG.open(i.videoCover).convert("RGB")
             blurHash = blurhash.encode(numpy.array(blur))
